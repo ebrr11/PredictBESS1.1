@@ -102,12 +102,12 @@ elif page == "📋 Proje Özeti":
 
     st.divider()
 
-    st.subheader("🔋 35 MW Hibrit Depolama Mimarisi (Uygar RES)")
+    st.subheader("🔋 Hibrit Depolama Mimarisi (Uygar RES)")
 
     col1, col2, col3 = st.columns(3)
     with col1:
         st.success("""
-        ### ⚡ Süper Kapasitör (2 MW)
+        ### ⚡ Süper Kapasitör
         • Milisaniye tepki süresi  
         • Sentetik atalet (RoCoF)  
         • Anlık yük sarsıntı yönetimi  
@@ -115,7 +115,7 @@ elif page == "📋 Proje Özeti":
 
     with col2:
         st.info("""
-        ### 🔋 LFP Batarya (33 MW / 66 MWh)
+        ### 🔋 LFP Batarya
         • PFK / SFK Yan hizmetler  
         • Yüksek çevrim ve güç  
         • 2 saatlik hızlı deşarj  
@@ -123,9 +123,9 @@ elif page == "📋 Proje Özeti":
 
     with col3:
         st.warning("""
-        ### 🏭 Metal-Hava LDES (15 MW / 360 MWh)
+        ### 🏭 Metal-Hava LDES
         • 24 saatlik uzun süreli depolama  
-        • Çok düşük birim maliyet ($35/kWh)  
+        • Çok düşük birim maliyet 
         • Rüzgârsız gün döngü yönetimi  
         """)
 
