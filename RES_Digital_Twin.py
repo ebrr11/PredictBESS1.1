@@ -244,7 +244,7 @@ elif page == "🔋 Hibrit Batarya Sistemi":
     col1, col2, col3 = st.columns(3)
     with col1:
         st.success("""
-        ### ⚡ Süper Kapasitör (3 MW)
+        ### ⚡ Süper Kapasitör 
         • Milisaniye tepki süresi  
         • Frekans regülasyonu  
         • Sentetik atalet  
@@ -252,7 +252,7 @@ elif page == "🔋 Hibrit Batarya Sistemi":
 
     with col2:
         st.info("""
-        ### 🔋 LFP Batarya (35 MW / 70 MWh)
+        ### 🔋 LFP Batarya 
         • PFK / SFK Yan hizmetler  
         • Yüksek çevrim ömrü  
         •  
@@ -260,7 +260,7 @@ elif page == "🔋 Hibrit Batarya Sistemi":
 
     with col3:
         st.warning("""
-        ### 🏭 Metal-Hava LDES (1 MW / 100 MWh)
+        ### 🏭 Metal-Hava LDES 
         • 24 saat kesintisiz depolama  
         •  
         • Rüzgârsız gün emniyeti  
