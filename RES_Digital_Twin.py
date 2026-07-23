@@ -29,7 +29,6 @@ page = st.sidebar.radio(
         "📋 Proje Özeti",
         "⚙️ Türbin Sağlığı & RUL",
         "🔋 Hibrit Batarya Sistemi",
-        "📈 Yatırım Optimizasyonu",
         "🌱 Sürdürülebilirlik"
     ]
 )
@@ -62,7 +61,6 @@ if page == "🏠 Ana Sayfa":
     
     st.markdown("<br><br><br><br>", unsafe_allow_html=True)
     
-    # Devasa PredictBESS Başlığı
     st.markdown("""
         <h1 style='text-align: center; font-size: 90px; font-weight: 900; letter-spacing: 4px; margin-bottom: 0px;'>
             ⚡ PREDICTBESS ⚡
@@ -98,37 +96,37 @@ elif page == "📋 Proje Özeti":
 
     c1, c2, c3, c4 = st.columns(4)
     c1.metric("⚙️ Türbin Sayısı", "73")
-    c2.metric("🔋 Batarya Teknolojisi", "3")
+    c2.metric("🔋 Batarya Teknolojisi", "3 Katmanlı")
     c3.metric("🤖 AI Modeli", "Aktif")
-    c4.metric("📈 Geri Ödeme", "4.83 Yıl")
+    c4.metric("💰 Toplam CAPEX", "~42.4 M$")
 
     st.divider()
 
-    st.subheader("🔋 Hibrit Depolama Mimarisi")
+    st.subheader("🔋 35 MW Hibrit Depolama Mimarisi (Uygar RES)")
 
     col1, col2, col3 = st.columns(3)
     with col1:
         st.success("""
-        ### ⚡ Süper Kapasitör
-        • Frekans desteği
-        • Milisaniye tepki süresi
-        • Ani yük değişim yönetimi
+        ### ⚡ Süper Kapasitör (2 MW)
+        • Milisaniye tepki süresi  
+        • Sentetik atalet (RoCoF)  
+        • Anlık yük sarsıntı yönetimi  
         """)
 
     with col2:
         st.info("""
-        ### 🔋 LFP Batarya
-        • Günlük enerji yönetimi
-        • Yüksek çevrim ömrü
-        • Güvenli operasyon
+        ### 🔋 LFP Batarya (33 MW / 66 MWh)
+        • PFK / SFK Yan hizmetler  
+        • Yüksek çevrim ve güç  
+        • 2 saatlik hızlı deşarj  
         """)
 
     with col3:
         st.warning("""
-        ### 🏭 Demir-Hava
-        • Uzun süreli (sezonsal) depolama
-        • Düşük yatırım maliyeti
-        • Yüksek depolama kapasitesi
+        ### 🏭 Metal-Hava LDES (15 MW / 360 MWh)
+        • 24 saatlik uzun süreli depolama  
+        • Çok düşük birim maliyet ($35/kWh)  
+        • Rüzgârsız gün döngü yönetimi  
         """)
 
 # ==========================================================
@@ -158,7 +156,7 @@ elif page == "⚙️ Türbin Sağlığı & RUL":
 
     with k2:
         st.info("""
-        ### Uygar RES
+        ### Uygar RES (35 MW Hibrit BESS Entegre)
         • **Kurulu Güç:** 250 MW  
         • **Türbin Sayısı:** 60  
         • **Konum:** İzmir / Bergama  
@@ -183,8 +181,6 @@ elif page == "⚙️ Türbin Sağlığı & RUL":
     if santral == "Çanakkale RES":
         kurulu_guc = 29.9
         turbin_sayisi = 13
-        yillik_uretim = 91.6
-        kritik_turbin = 2
         ortalama_rul = 9.8
         saglikli_sayisi = 8
         warning_sayisi = 3
@@ -192,8 +188,6 @@ elif page == "⚙️ Türbin Sağlığı & RUL":
     else:
         kurulu_guc = 250
         turbin_sayisi = 60
-        yillik_uretim = 850
-        kritik_turbin = 3
         ortalama_rul = 17.2
         saglikli_sayisi = 48
         warning_sayisi = 9
@@ -204,7 +198,7 @@ elif page == "⚙️ Türbin Sağlığı & RUL":
     c1, c2, c3, c4 = st.columns(4)
     c1.metric("Kurulu Güç", f"{kurulu_guc} MW")
     c2.metric("Türbin Sayısı", turbin_sayisi)
-    c3.metric("Kritik Türbin", kritik_turbin)
+    c3.metric("Kritik Türbin", critical_sayisi)
     c4.metric("Ortalama RUL", f"{ortalama_rul} yıl")
 
     st.progress(min(int(ortalama_rul * 4), 100))
@@ -220,248 +214,67 @@ elif page == "⚙️ Türbin Sağlığı & RUL":
 
     st.divider()
 
-    st.subheader("🚨 Kritik Türbinler")
-    if santral == "Çanakkale RES":
-        st.error("🔴 T13 | Sağlık: 58 | RUL: 2.4 yıl")
-        st.error("🔴 T04 | Sağlık: 61 | RUL: 3.2 yıl")
-    else:
-        st.error("🔴 U07 | Sağlık: 55 | RUL: 4.1 yıl")
-        st.error("🔴 U21 | Sağlık: 52 | RUL: 3.8 yıl")
-        st.error("🔴 U43 | Sağlık: 57 | RUL: 4.5 yıl")
-
-    st.divider()
-
-    # 🗺️ GERÇEK UYDU/FOTOĞRAF GÖRÜNTÜLÜ HARİTA (Esri World Imagery)
+    # Harita Bölümü
     st.subheader("🗺️ Santral Coğrafi Haritası (Uydu Görüntüsü)")
-    
     satellite_tile = "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}"
     tile_attr = "Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community"
 
     if santral == "Çanakkale RES":
-        m = folium.Map(
-            location=[39.8690, 26.2230], 
-            zoom_start=14, 
-            tiles=satellite_tile, 
-            attr=tile_attr
-        )
-        turbines = [
-            ("T01", 39.8731, 26.2179), ("T02", 39.8747, 26.2259), ("T03", 39.8744, 26.2248),
-            ("T04", 39.8771, 26.2281), ("T05", 39.8666, 26.2070), ("T06", 39.8666, 26.2119),
-            ("T07", 39.8665, 26.2162), ("T08", 39.8654, 26.2198), ("T09", 39.8627, 26.2229),
-            ("T10", 39.8643, 26.2262), ("T11", 39.8649, 26.2297), ("T12", 39.8615, 26.2328),
-            ("T13", 39.8672, 26.2389)
-        ]
+        m = folium.Map(location=[39.8690, 26.2230], zoom_start=14, tiles=satellite_tile, attr=tile_attr)
+        turbines = [("T01", 39.8731, 26.2179), ("T04", 39.8771, 26.2281), ("T13", 39.8672, 26.2389)]
         critical_list = ["T04", "T13"]
-        warning_list = ["T07", "T08", "T11"]
     else:
-        m = folium.Map(
-            location=[39.268, 27.405], 
-            zoom_start=14, 
-            tiles=satellite_tile, 
-            attr=tile_attr
-        )
-        turbines = [
-            ("U01", 39.273640, 27.417121), ("U02", 39.273277, 27.413236), ("U03", 39.274661, 27.409466),
-            ("U04", 39.275956, 27.406199), ("U05", 39.267273, 27.402777), ("U06", 39.266477, 27.392957),
-            ("U07", 39.262325, 27.393297), ("U08", 39.260591, 27.401122), ("U09", 39.260151, 27.405387)
-        ]
-        critical_list = ["U07"]
-        warning_list = ["U05", "U06"]
+        m = folium.Map(location=[39.268, 27.405], zoom_start=14, tiles=satellite_tile, attr=tile_attr)
+        turbines = [("U01", 39.2736, 27.4171), ("U07", 39.2623, 27.3932), ("U21", 39.2550, 27.3900)]
+        critical_list = ["U07", "U21"]
 
     for name, lat, lon in turbines:
-        if name in critical_list:
-            color = "red"
-        elif name in warning_list:
-            color = "orange"
-        else:
-            color = "green"
-            
-        folium.Marker(
-            [lat, lon], 
-            popup=f"<b>Türbin:</b> {name}", 
-            tooltip=name, 
-            icon=folium.Icon(color=color, icon="info-sign")
-        ).add_to(m)
+        color = "red" if name in critical_list else "green"
+        folium.Marker([lat, lon], popup=f"<b>Türbin:</b> {name}", tooltip=name, icon=folium.Icon(color=color, icon="info-sign")).add_to(m)
 
     st_folium(m, width=1100, height=450)
-
-    st.divider()
-
-    # DETAYLI TÜRBİN ANALİZİ
-    st.subheader("🎯 Türbin Detay Analizi")
-    
-    if santral == "Çanakkale RES":
-        selected_name = st.selectbox("Analiz Edilecek Türbini Seçin", list(canakkale_data.keys()))
-        Saglik, rul, vib, oil, temp, miner, turb = canakkale_data[selected_name]
-    else:
-        selected_name = st.selectbox("Analiz Edilecek Türbini Seçin", [f"U{i:02d}" for i in range(1, 61)])
-        Saglik = random.randint(60, 95)
-        rul = round(random.uniform(5, 22), 1)
-        vib = round(random.uniform(1, 8), 1)
-        oil = random.randint(80, 350)
-        temp = random.randint(55, 80)
-        miner = round(random.uniform(0.15, 0.75), 2)
-        turb = random.randint(6, 20)
-
-    st.info(f"Seçilen Türbin: **{selected_name}**")
-
-    st.write("### 📊 Türbin Durumu")
-    st.progress(Saglik)
-
-    tc1, tc2, tc3 = st.columns(3)
-    if Saglik >= 80:
-        tc1.success(f"Sağlık Skoru: %{Saglik}")
-        tc3.success("🟢 Sağlıklı")
-    elif Saglik >= 65:
-        tc1.warning(f"Sağlık Skoru: %{Saglik}")
-        tc3.warning("🟡 İzleme Altında")
-    else:
-        tc1.error(f"Sağlık Skoru: %{Saglik}")
-        tc3.error("🔴 Kritik")
-
-    tc2.metric("RUL (Kalan Ömür)", f"{rul} Yıl")
-
-    st.divider()
-
-    st.write("### 🔧 Sensör Verileri")
-    sc1, sc2, sc3, sc4, sc5 = st.columns(5)
-    sc1.metric("Titreşim", f"{vib} mm/s")
-    sc2.metric("Yağ Partikül", f"{oil} ppm")
-    sc3.metric("Sıcaklık", f"{temp} °C")
-    sc4.metric("Yorulma Hasarı", miner)
-    sc5.metric("Türbülans", f"%{turb}")
-
-    st.divider()
-
-    st.write("### 🤖 AI Karar Motoru")
-
-    vib_loss = min(vib * 2, 20)
-    oil_loss = min(oil / 30, 20)
-    temp_loss = max((temp - 60) * 0.8, 0)
-    miner_loss = miner * 30
-    turb_loss = turb * 0.5
-
-    Saglik_ai = max(0, round(100 - vib_loss - oil_loss - temp_loss - miner_loss - turb_loss))
-
-    st.write(f"• Titreşim Etkisi: **-{vib_loss:.1f}**")
-    st.write(f"• Yağ Aşınması: **-{oil_loss:.1f}**")
-    st.write(f"• Sıcaklık Etkisi: **-{temp_loss:.1f}**")
-    st.write(f"• Yorulma Hasarı: **-{miner_loss:.1f}**")
-    st.write(f"• Türbülans Etkisi: **-{turb_loss:.1f}**")
-
-    st.metric("AI Hesaplanan Sağlık Skoru", Saglik_ai)
-
-    if Saglik_ai < 50:
-        st.error("🔴 REPOWERING ÖNERİLİYOR")
-    elif Saglik_ai < 70:
-        st.warning("🟡 YAKIN TAKİP GEREKLİ")
-    else:
-        st.success("🟢 NORMAL OPERASYON")
-
-    st.divider()
-
-    st.write("### 📡 Türbin Sağlık Profili (Radar)")
-    fig = go.Figure()
-    fig.add_trace(go.Scatterpolar(
-        r=[
-            max(0, 100 - vib * 10),
-            max(0, 100 - oil / 5),
-            max(0, 100 - temp),
-            max(0, 100 - miner * 100),
-            max(0, 100 - turb * 4)
-        ],
-        theta=["Titreşim", "Yağ", "Sıcaklık", "Yorulma", "Türbülans"],
-        fill="toself"
-    ))
-    fig.update_layout(
-        polar=dict(
-            radialaxis=dict(visible=True, range=[0, 100])
-        ),
-        height=400
-    )
-    st.plotly_chart(fig, use_container_width=True)
-
-    st.divider()
-
-    st.write("### 📈 RUL Karşılaştırması")
-    if santral == "Çanakkale RES":
-        chart_df = pd.DataFrame({
-            "Türbin": list(canakkale_data.keys()),
-            "RUL": [v[1] for v in canakkale_data.values()]
-        })
-    else:
-        chart_df = pd.DataFrame({
-            "Türbin": [f"U{i:02d}" for i in range(1, 61)],
-            "RUL": [10 + (i % 12) for i in range(1, 61)]
-        })
-
-    fig_bar = px.bar(chart_df, x="Türbin", y="RUL", color="RUL", color_continuous_scale="Viridis")
-    st.plotly_chart(fig_bar, use_container_width=True)
 
 # ==========================================================
 # 🔋 HİBRİT BATARYA SİSTEMİ
 # ==========================================================
 elif page == "🔋 Hibrit Batarya Sistemi":
 
-    st.title("🔋 Hibrit Batarya Sistemi")
+    st.title("🔋 35 MW Hibrit Batarya Sistemi (Uygar RES)")
 
     col1, col2, col3 = st.columns(3)
     with col1:
         st.success("""
-        ### ⚡ Süper Kapasitör
+        ### ⚡ Süper Kapasitör (3 MW)
         • Milisaniye tepki süresi  
         • Frekans regülasyonu  
-        • Ani yük değişimleri  
+        • Sentetik atalet  
         """)
 
     with col2:
         st.info("""
-        ### 🔋 LFP Batarya
-        • Günlük enerji yönetimi  
+        ### 🔋 LFP Batarya (35 MW / 70 MWh)
+        • PFK / SFK Yan hizmetler  
         • Yüksek çevrim ömrü  
-        • Güvenli çalışma  
+        •  
         """)
 
     with col3:
         st.warning("""
-        ### 🏭 Demir-Hava
-        • Uzun süreli depolama  
-        • Düşük maliyet  
-        • Yüksek kapasite  
+        ### 🏭 Metal-Hava LDES (1 MW / 100 MWh)
+        • 24 saat kesintisiz depolama  
+        •  
+        • Rüzgârsız gün emniyeti  
         """)
-
-# ==========================================================
-# 📈 YATIRIM OPTİMİZASYONU
-# ==========================================================
-elif page == "📈 Yatırım Optimizasyonu":
-
-    st.title("📈 Yatırım Optimizasyonu")
-    santral = st.session_state.get("santral", "Çanakkale RES")
-    st.info(f"Analiz Edilen Santral: **{santral}**")
-
-    c1, c2, c3, c4 = st.columns(4)
-    c1.metric("CAPEX", "27.46 M$")
-    c2.metric("Yıllık OPEX", "494 K$")
-    c3.metric("Net Kazanç", "5.68 M$")
-    c4.metric("Payback", "4.83 Yıl")
 
     st.divider()
 
-    st.subheader("📊 Amortisman & Nakit Akış Analizi")
-    years = [f"Yıl {i}" for i in range(1, 11)]
-    cash_flow = [-27.46 + (i * 5.68) for i in range(1, 11)]
-    payback_df = pd.DataFrame({"Yıllar": years, "Kümülatif Nakit Akışı (M$)": cash_flow})
-    
-    fig_payback = px.line(payback_df, x="Yıllar", y="Kümülatif Nakit Akışı (M$)", markers=True)
-    fig_payback.add_hline(y=0, line_dash="dash", line_color="red", annotation_text="Başa Baş Noktası (Payback)")
-    st.plotly_chart(fig_payback, use_container_width=True)
 
 # ==========================================================
 # 🌱 SÜRDÜRÜLEBİLİRLİK
 # ==========================================================
 elif page == "🌱 Sürdürülebilirlik":
 
-    st.title("🌱 Sürdürülebilirlik")
+    st.title("🌱 Sürdürülebilirlik & ESG Performansı")
     santral = st.session_state.get("santral", "Çanakkale RES")
 
     if santral == "Çanakkale RES":
@@ -469,7 +282,7 @@ elif page == "🌱 Sürdürülebilirlik":
         enerji = "65"
     else:
         co2 = "11.000"
-        enerji = "300"
+        enerji = "850"
 
     a, b, c = st.columns(3)
     a.metric("CO₂ Azaltımı", f"{co2} ton/yıl")
@@ -478,19 +291,19 @@ elif page == "🌱 Sürdürülebilirlik":
 
     st.divider()
 
-    st.subheader("🌍 Birleşmiş Milletler Hedefleri")
+    st.subheader("🌍 Birleşmiş Milletler Sürdürülebilir Kalkınma Hedefleri")
 
     st.success("""
     ### SDG 7: Erişilebilir ve Temiz Enerji
-    Yenilenebilir enerji üretimini artırarak şebekeye kesintisiz ve temiz güç sağlar.
+    Yenilenebilir enerji üretimini hibrit depolama ile destekleyerek şebekeye kesintisiz güç sağlar.
     """)
 
     st.info("""
     ### SDG 9: Sanayi, Yenilikçilik ve Altyapı
-    Yapay zekâ ve hibrit depolama ile akıllı şebeke altyapılarını destekler.
+    Yapay zekâ tabanlı dijital ikiz ve 3 katmanlı gelişmiş batarya altyapılarını entegre eder.
     """)
 
     st.warning("""
     ### SDG 13: İklim Eylemi
-    Fosil yakıt bağımlılığını ve karbon emisyonlarını doğrudan azaltır.
+    Fosil yakıt bağımlılığını azaltarak karbon emisyonlarını kalıcı olarak düşürür.
     """)
