@@ -98,7 +98,7 @@ elif page == "📋 Proje Özeti":
     c1.metric("⚙️ Türbin Sayısı", "73")
     c2.metric("🔋 Batarya Teknolojisi", "3 Katmanlı")
     c3.metric("🤖 AI Modeli", "Aktif")
-    c4.metric("💰 Toplam CAPEX", "~42.4 M$")
+
 
     st.divider()
 
