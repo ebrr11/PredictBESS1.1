@@ -220,26 +220,14 @@ elif page == "⚙️ Türbin Sağlığı & RUL":
 
     st.divider()
 
-    # Türbin Detay Bölümü
-    st.subheader("🔍 Türbin Bazlı Detay ve RUL Analizi")
-    secilen_turbin = st.selectbox("İncelemek İçin Türbin Seçin", list(aktif_veri.keys()))
-    t_vals = aktif_veri[secilen_turbin]
-
-    col_a, col_b, col_c = st.columns(3)
-    col_a.metric("Sağlık Skoru", f"{t_vals[0]} / 100")
-    col_b.metric("Kalan Ömür (RUL)", f"{t_vals[6]} Yıl")
-    col_c.metric("Titreşim Seviyesi", f"{t_vals[3]} mm/s")
-
-    st.divider()
-
-    # 1. HARİTA BÖLÜMÜ (Üste Alındı ve Çanakkale (13) ile Uygar (60) türbinin tümü doğru ve kaymadan işlendi)
-    st.subheader("🗺️ Santral Coğrafi Haritası (Uydu Görüntüsü)")
+    # 1. HARİTA BÖLÜMÜ (Sadece tam ve kesin verilen Çanakkale 13 türbin ve Uygar örnek koordinat listesi kullanıldı)
+    st.subheader("🗺️ Santral Coğrafi Haritası ve İnteraktif Türbin Seçimi")
     satellite_tile = "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}"
     tile_attr = "Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community"
 
     if santral == "Çanakkale RES":
-        m = folium.Map(location=[39.8690, 26.2230], zoom_start=13, tiles=satellite_tile, attr=tile_attr)
-        # Çanakkale RES için 13 türbinin tam ve doğru coğrafi koordinatları
+        map_center = [39.8690, 26.2230]
+        # İlk kodda net olarak verilen 13 Çanakkale türbin koordinat listesi
         turbines = [
             ("T01", 39.8731, 26.2179, "Sağlıklı"),
             ("T02", 39.8710, 26.2195, "Sağlıklı"),
@@ -256,26 +244,17 @@ elif page == "⚙️ Türbin Sağlığı & RUL":
             ("T13", 39.8672, 26.2389, "Kritik")
         ]
     else:
-        m = folium.Map(location=[39.268, 27.405], zoom_start=13, tiles=satellite_tile, attr=tile_attr)
-        # Uygar RES için tam 60 türbinin rüzgar çiftliği çizgisel/küme dizilimine uygun, kayma yapmayan deterministik koordinatları
-        turbines = []
-        center_lat, center_lon = 39.268, 27.405
-        for i in range(1, 61):
-            t_id = f"U{i:02d}"
-            # Matrissel ve düzenli yerleşim (grid tabanlı rüzgar santrali dizilimi)
-            row = (i - 1) // 10
-            col = (i - 1) % 10
-            lat = center_lat + (row - 2.5) * 0.006
-            lon = center_lon + (col - 4.5) * 0.008
-            
-            if i in [7, 21, 45]:
-                durum = "Kritik"
-            elif i in [3, 12, 19, 28, 36, 52]:
-                durum = "İzleme"
-            else:
-                durum = "Sağlıklı"
-                
-            turbines.append((t_id, lat, lon, durum))
+        map_center = [39.268, 27.405]
+        # İlk kodda Uygar RES için verilen temel örnek referans koordinat noktaları
+        turbines = [
+            ("U01", 39.2736, 27.4171, "Sağlıklı"),
+            ("U07", 39.2623, 27.3932, "Kritik"),
+            ("U21", 39.2550, 27.3900, "Kritik"),
+            ("U12", 39.2680, 27.4050, "İzleme"),
+            ("U30", 39.2700, 27.4100, "Sağlıklı")
+        ]
+
+    m = folium.Map(location=map_center, zoom_start=13, tiles=satellite_tile, attr=tile_attr)
 
     for name, lat, lon, durum in turbines:
         if durum == "Kritik":
@@ -292,11 +271,43 @@ elif page == "⚙️ Türbin Sağlığı & RUL":
             icon=folium.Icon(color=color, icon="info-sign")
         ).add_to(m)
 
-    st_folium(m, width=1100, height=450)
+    map_data = st_folium(m, width=1100, height=450)
+
+    # Harita üzerinde tıklanan noktaya göre türbin seçimi entegrasyonu
+    secilen_turbin = list(aktif_veri.keys())[0]
+    if map_data and map_data.get("last_clicked"):
+        clicked_lat = map_data["last_clicked"]["lat"]
+        clicked_lon = map_data["last_clicked"]["lng"]
+        
+        min_dist = float("inf")
+        closest_turbine = secilen_turbin
+        for name, lat, lon, durum in turbines:
+            dist = (lat - clicked_lat)**2 + (lon - clicked_lon)**2
+            if dist < min_dist:
+                min_dist = dist
+                closest_turbine = name
+        if min_dist < 0.005:
+            secilen_turbin = closest_turbine
 
     st.divider()
 
-    # 2. RUL GRAFİĞİ BÖLÜMÜ (Haritanın altında)
+    # 2. TÜRBAZLI DETAY VE SEÇİM BÖLÜMÜ
+    st.subheader("🔍 Türbin Bazlı Detay ve RUL Analizi")
+    
+    turbin_listesi = list(aktif_veri.keys())
+    secilen_index = turbin_listesi.index(secilen_turbin) if secilen_turbin in turbin_listesi else 0
+    
+    secilen_turbin = st.selectbox("İncelemek İçin Türbin Seçin", turbin_listesi, index=secilen_index)
+    t_vals = aktif_veri[secilen_turbin]
+
+    col_a, col_b, col_c = st.columns(3)
+    col_a.metric("Sağlık Skoru", f"{t_vals[0]} / 100")
+    col_b.metric("Kalan Ömür (RUL)", f"{t_vals[6]} Yıl")
+    col_c.metric("Titreşim Seviyesi", f"{t_vals[3]} mm/s")
+
+    st.divider()
+
+    # 3. RUL GRAFİĞİ BÖLÜMÜ
     st.subheader("📈 Tüm Türbinler RUL (Kalan Ömür) Karşılaştırma Grafiği")
     df_chart = pd.DataFrame(
         [{"Türbin": k, "RUL (Yıl)": v[6], "Sağlık Skoru": v[0]} for k, v in aktif_veri.items()]
